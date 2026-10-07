@@ -1,7 +1,7 @@
 # JOURNAL.md
 
 ## 2026-10-04
-* **22:37 – 00:11** *(1h 34m)* — Detailed general concept and execution workflow (`idea.md`)
+* **22:37 – 00:11** *(1h 34m)* — Detailed general concept and execution workflow. First I asked claude.ai to interview me about the game and then I refined the file myself. (`idea.md`)
 
 ## 2026-10-05
 * **10:04 – 11:43** *(1h 39m)* — Drafted all script/text lines
@@ -13,6 +13,11 @@
 * **10:41 - 10:56** *(0h 13m)* - Coded small part of extra.js [lapse](https://lapse.hackclub.com/timelapse/SqXpaieiZFP_)  
 * **21:02 - 22:24** *(0h 13m)* - Coded a little bit more of extra.js [lapse](https://lapse.hackclub.com/timelapse/SqXpaieiZFP_) 
 
+## 2026-10-07
+* **11:07 - 11:20** *(0h 13m)* - Coded small part of extra.js [lapse](https://lapse.hackclub.com/timelapse/NlSVLPPg4STn)  
+* **12:23 - 13:53** *(1h 30m)* - Coded most of the remaining part of extra.js [lapse](https://lapse.hackclub.com/timelapse/NlSVLPPg4STn) 
+* **14:03 - 14:29** *(0h 26m)* - Coded small part of extra.js [lapse](https://lapse.hackclub.com/timelapse/NlSVLPPg4STn) 
+
 
 ---
-**Total Spent:** `07:11:00`
+**Total Spent:** `09:20:00`

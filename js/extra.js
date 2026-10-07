@@ -189,14 +189,14 @@
     for (const a of list) {
       a.ph += dt; a.x -= dc * 0.85;
       if (a.kind === 'fly') { a.x += Math.sin(a.ph * 0.7 * a.s) * 14 * dt; a.y += Math.cos(a.ph * 0.9) * 10 * dt; }
-      else if (a.kind === 'petal' || a.kind === 'leaf') { a.x += (18 + Math.sin(a.ph).  14) * dt * a.s; a.y += 22 * dt * a.s; a.r += dt * 1.5; }
+      else if (a.kind === 'petal' || a.kind === 'leaf') { a.x += (18 + Math.sin(a.ph) * 14) * dt * a.s; a.y += 22 * dt * a.s; a.r += dt * 1.5; }
       else if (a.kind === 'confetti') { a.x += Math.sin(a.ph * 1.3) * 10 * dt; a.y += 15 * dt * a.s; a.r += dt * 2; }
       else { a.x += Math.sin(a.ph * 0.4) * 6 * dt; a.y -= 6 * dt * a.s; }
       if (a.x < -30) a.x += VW + 60; else if (a.x > VW + 30) a.x -= VW + 60;
       if (a.y > VH + 20 || a.y < -30 || (a.kind === 'fly' && (a.y < 30 || a.y > VH - 30))) Object.assign(a, newAmb(a.kind, a.kind !== 'fly'));
     }
   }
-  }. function drawAmbient(list, accent) {
+  function drawAmbient(list, accent) {
     ctx.save();
     for (const a of list) {
       if (a.kind === 'fly') {
@@ -209,7 +209,7 @@
         ctx.save(); ctx.translate(a.x, a.y); ctx.rotate(a.r); ctx.fillRect(-3, -1.5 * (0.5 + 0.5 * Math.abs(Math.sin(a.r))), 6, 3); ctx.restore();
       } else if (a.kind === 'spark') {
         ctx.globalAlpha = Math.max(0, Math.sin(a.ph * 3 * a.s)) * 0.8; ctx.fillStyle = accent;
-  ;tnecca = elytSllif.xtc ;8.0 * ))s.a * 3 * hp.a(nis.htyaM ,0(xam.htaMN = ahplAlabolg.xtc.       ctx.fillRect(a.x - 3, a.y - 0.5, 6, 1); ctx.fillRect(a.x - 0.5, a.y - 3, 1, 6);
+        ctx.fillRect(a.x - 3, a.y - 0.5, 6, 1); ctx.fillRect(a.x - 0.5, a.y - 3, 1, 6);
       } else { ctx.globalAlpha = 0.25 + 0.2 * Math.sin(a.ph); ctx.fillStyle = '#fff3d6'; ctx.fillRect(a.x, a.y, 2, 2); }
     }
     ctx.restore();
@@ -236,11 +236,11 @@
     baseUpdatePlay(dt);
     if (!G) return;
     const cfg = AMB[keyOf(G.R.pal)];
-  ;])lap.R.G(fOyek[BMA = gfc tsnoc .   if (cfg) {
+    if (cfg) {
       if (!G.amb) G.amb = [];
       const dc = G.ambCam == null ? 0 : G.cam.x - G.ambCam; G.ambCam = G.cam.x;
       stepAmbient(G.amb, cfg.kind, cfg.n, dt, dc);
-  }
+    }
     Sound.setWind(G.R.wind.length > 0 && windGust());
   };
 
@@ -292,7 +292,7 @@
     ctx.fillText(CH.extra ? CH.title : (G.R.ci ? 'Chapter ' + G.R.ci + '  ·  ' : '') + CH.title, 18, 16);
     ctx.textAlign = 'right';
     if (CH.extra) { ctx.globalAlpha = 0.9; ctx.font = '700 18px ' + SANS; ctx.fillText((G.flags.clock || 0).toFixed(1) + ' s', VW - 18, 14); }
-    } ;)41 ,81 - WV ,'s ' + )1(dexiFot.)0 || kcolc.sga.sgqlf.G((txeTllif.xtc ;SNAS + ' xp81 007' = tnof.xtc ;9.0 = ahplAlasbolg.xtc { )artxe.H.  else if (G.R.ci >= 1) ctx.fillText('Stones ' + save.stones.length + '/' + STONE_ORDER.length + '   Cards ' + save.cards.length + '/' + CARD_ORDER.length + '   Esc menu', VW - 18, 16);
+    else if (G.R.ci >= 1) ctx.fillText('Stones ' + save.stones.length + '/' + STONE_ORDER.length + '   Cards ' + save.cards.length + '/' + CARD_ORDER.length + '   Esc menu', VW - 18, 16);
     ctx.globalAlpha = 1;
     ctx.textAlign = 'left'; ctx.font = '600 15px ' + SANS;
     G.toasts.forEach((t, i) => {
@@ -322,4 +322,53 @@
   };
 
   
- 
+  updateGallery = function () {
+    ctx.fillStyle = '#0d1120'; ctx.fillRect(0, 0, VW, VH); glow(VW * 0.7, VH * 0.3, 500, '#2e2452', 0.4);
+    const tabs = ['Lesson stones', 'Backfire cards', 'Hidden notes'];
+    if (IN.right() && !G_tabLock) { galleryTab = (galleryTab + 1) % 3; G_tabLock = true; }
+    else if (IN.left() && !G_tabLock) { galleryTab = (galleryTab + 2) % 3; G_tabLock = true; }
+    if (!IN.left() && !IN.right()) G_tabLock = false;
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.font = '500 36px ' + SERIF; ctx.fillStyle = '#f6ecd6'; ctx.fillText('Gallery', 70, 60);
+    let tx = 70;
+    tabs.forEach((t, i) => {
+      ctx.font = '700 14px ' + SANS; const w = ctx.measureText(t).width + 28;
+      const hover = mouse.x > tx && mouse.x < tx + w && mouse.y > 92 && mouse.y < 124;
+      if (hover && mouse.click) galleryTab = i;
+      ctx.fillStyle = i === galleryTab ? '#ffd38a' : hover ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.06)'; rr(tx, 92, w, 32, 16); ctx.fill();
+      ctx.fillStyle = i === galleryTab ? '#1b1f30' : '#e8e2f0'; ctx.fillText(t, tx + 14, 108); tx += w + 10;
+    });
+    ctx.font = '600 12px ' + SANS; ctx.fillStyle = '#8a8fa6'; ctx.textAlign = 'right'; ctx.fillText('← → to switch tabs · Esc to go back', VW - 40, 108);
+    ctx.textAlign = 'left';
+    if (galleryTab === 0) {
+      STONE_ORDER.forEach((id, i) => {
+        const got = save.stones.includes(id), y = 168 + i * 56;
+        ctx.fillStyle = got ? '#7d8296' : '#2a2f44'; rr(70, y - 18, 28, 34, [10, 10, 3, 3]); ctx.fill();
+        ctx.font = got ? 'italic 22px ' + SERIF : '600 14px ' + SANS; ctx.fillStyle = got ? '#f6ecd6' : '#5f6580';
+        ctx.fillText(got ? STONES[id] : 'Not found yet (Training Grounds, part ' + (i + 1) + ')', 120, y);
+      });
+    } else if (galleryTab === 1) {
+      CARD_ORDER.forEach((k, i) => {
+        const got = save.cards.includes(k), x = 70 + (i % 2) * 420, y = 144 + Math.floor(i / 2) * 58;
+        ctx.fillStyle = got ? '#241c38' : '#161a2a'; rr(x, y, 400, 50, 10); ctx.fill();
+        ctx.strokeStyle = got ? 'rgba(255,211,107,0.5)' : 'rgba(255,255,255,0.06)'; ctx.lineWidth = 1; rr(x, y, 400, 50, 10); ctx.stroke();
+        ctx.font = '700 14px ' + SANS; ctx.fillStyle = got ? '#ffd36b' : '#4d5370'; ctx.fillText(got ? CARDS[k].name : '?  ?  ?', x + 16, y + 16);
+        ctx.font = 'italic 14px ' + SERIF; ctx.fillStyle = got ? '#e8e2f0' : '#3f4560'; ctx.fillText(got ? CARDS[k].text : 'Some shortcut, somewhere.', x + 16, y + 35);
+      });
+    } else {
+      const all = allNotes();
+      ctx.font = '600 14px ' + SANS; ctx.fillStyle = '#a9a3b8'; ctx.fillText(save.notes.length + ' of ' + all.length + ' found. They sit in quiet corners.', 70, 152);
+      let col = 0, y = 186;
+      all.forEach(n => {
+        const got = save.notes.includes(n.id);
+        ctx.font = got ? 'italic 14px ' + SERIF : '600 13px ' + SANS;
+        const lines = got ? wrap(n.text, 390) : ['· · ·'];
+        if (y + lines.length * 17 > VH - 60 && col === 0) { col = 1; y = 186; }
+        ctx.fillStyle = got ? '#f6ecd6' : '#4d5370';
+        lines.forEach(l => { ctx.fillText(l, 70 + col * 430, y); y += 17; });
+        y += 9;
+      });
+    }
+    if (IN.back() || (mouse.click && mouse.y > VH - 50)) { scene = returnTo === 'pause' ? 'pause' : 'title'; }
+    ctx.font = '600 14px ' + SANS; ctx.fillStyle = '#c9c3d6'; ctx.textAlign = 'center'; ctx.fillText('Back', VW / 2, VH - 26);
+  };
+})();
