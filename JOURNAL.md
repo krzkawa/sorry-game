@@ -18,6 +18,7 @@
 * **12:23 - 13:53** *(1h 30m)* - Coded most of the remaining part of extra.js [lapse](https://lapse.hackclub.com/timelapse/NlSVLPPg4STn) 
 * **14:03 - 14:29** *(0h 26m)* - Coded small part of extra.js [lapse](https://lapse.hackclub.com/timelapse/NlSVLPPg4STn) 
 * **14:42 - 15:37** *(0h 55m)* - Coded first part of game.js [lapse](https://lapse.hackclub.com/timelapse/2r55LQoqCjgV) 
+* **16:07 - 17:13** *(1h 06m)* - Coded next part of game.js [lapse](https://lapse.hackclub.com/timelapse/2r55LQoqCjgV) 
 
 ---
-**Total Spent:** `10:15:00`
+**Total Spent:** `11:21:00`
