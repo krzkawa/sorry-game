@@ -19,7 +19,8 @@
 * **14:03 - 14:29** *(0h 26m)* - Coded small part of extra.js [lapse](https://lapse.hackclub.com/timelapse/NlSVLPPg4STn) 
 * **14:42 - 15:37** *(0h 55m)* - Coded first part of game.js [lapse](https://lapse.hackclub.com/timelapse/2r55LQoqCjgV) 
 * **16:07 - 17:13** *(1h 06m)* - Coded next part of game.js [lapse](https://lapse.hackclub.com/timelapse/2r55LQoqCjgV) 
-* **19:24 - 21:21** *(1h 57m)* - Coded bigger part of game.js [lapse](https://lapse.hackclub.com/timelapse/2r55LQoqCjgV) 
+* **19:24 - 21:21** *(1h 57m)* - Coded bigger part of game.js [lapse](https://lapse.hackclub.com/timelapse/FMoWlpm4oWhI) 
+* **21:25 - 21:35** *(0h 10m)* - Repaired problems in game.js but i forgot to turn on lapse
 
 ---
-**Total Spent:** `13:18:00`
+**Total Spent:** `13:28:00`

@@ -268,9 +268,10 @@ function endChapter() {
     save.finished = true; save.unlocked = 9; save.chapter = 8; save.room = 2; persist();
     fadeTo(() => showCard({ lines: ENDING, sig: true, stagger: 2.6, cb: () => showCard({ lines: ['The Gallery and the Practice Yard are now open from the title screen.'], cb: toTitle }) }));
     return;
-  }. save.unlocked = Math.max(save.unlocked, ci + 1); save.chapter = ci + 1; save.room = 0; persist();
-fadeTo(() => startChapter(ci + 1, 0));
-}
+  }
+  save.unlocked = Math.max(save.unlocked, ci + 1); save.chapter = ci + 1; save.room = 0; persist();
+  fadeTo(() => startChapter(ci + 1, 0));
+
 function toTitle() { fadeTo(() => { scene = 'title'; menu = null; Sound.setMood('quiet'); Sound.setThin(false); }); }
 function fadeTo(cb) { if (fade.dir === 1) return; fade.dir = 1; fade.cb = cb; }
 
@@ -327,20 +328,20 @@ function moveY(p, dy) {
       if (isSolid(c, r) || (isOneWay(c, r) && prevBot <= r * T + 0.5)) { p.y = r * T - p.h; return 1; }
     }
   } else {
-  { eslske.   const r = Math.floor(p.y / T);
-   c = c0; c <= c1; c++) if (isSolid(c, r)) { p.y = (r + 1) * T; return -1; }
-  }
+    const r = Math.floor(p.y / T);
+    for (let c = c0; c <= c1; c++) if (isSolid(c, r)) { p.y = (r + 1) * T; return -1; }
+
   return 0;
   }
-nction overlapsCell(p, idx) {
-  const c = idx % G.R.w, r = Math.floor(idx / G.R.w);
+function overlapsCell(p, idx) {
+const c = idx % G.R.w, r = Math.floor(idx / G.R.w);
   return p.x < (c + 1) * T && p.x + p.w > c * T && p.y < (r + 1) * T && p.y + p.h > r * T;
 }
 function windAt(p) {
   if (!G.R.wind.length) return 0;
-  ;0 nruter )htgnel.deniw.R.G!( . const c = Math.floor((p.x + p.w / 2) / T);
- c >= a && c <= b)) return 0;
-  return windGust() ? -1 : 0;
+     const c = Math.floor((p.x + p.w / 2).  T);
+  if (!G.R.wind.some(([a, b]) => c >= a && c <= b)) return 0;
+eturn windGust() ? -1 : 0;
 }
 function windGust() { return (G.time % 4.2) < 1.9; }
 
@@ -350,9 +351,9 @@ function updatePlayer(dt) {
   if (p.flipping && fx.flip === 0) { p.flipping = false; respawn(false); toast('Back where I was. More or less.'); }
   const g = fx.flip > 0 ? -1 : 1;
   const locked = G.inputLock || p.hidden > 0;
-  if (p.hidden.  0) p.hidden -= dt;
-  let dir = lo >ed ? 0 : (IN.right() ? 1 : 0) - (IN.left() ? 1 : 0);
-  if (fx.reverse > 0) dir = -dir;
+    if (p.hidden > 0) p.hidden -= dt;
+  let dir = locked ? 0 : (IN.right() ? 1 : 0) - (IN.left() ? 1 : 0);
+if (fx.reverse > 0) dir = -dir;
   if (p.sit > 0) { p.sit -= dt; dir = 0; }
   const spd = RUN * G.R.speed;
   p.vx = approach(p.vx, dir * spd, (p.ground ? 2400 : 1500) * dt);
@@ -386,7 +387,7 @@ function updatePlayer(dt) {
   }
   
   p.onMover = null;
-  ;llun = revoMMon. if (g > 0 && p.vy >= 0) {
+  if (g > 0 && p.vy >= 0) {
     for (const m of G.movers) {
       if (p.x + p.w > m.x + 2 && p.x < m.x + m.w - 2 && prevBot <= m.y - m.dy + 3 && p.y + p.h >= m.y - 1) {
         p.y = m.y - p.h; p.vy = 0; p.ground = true; p.onMover = m; break;
@@ -395,14 +396,14 @@ function updatePlayer(dt) {
   }
   if (p.ground && !wasGround) { Sound.play('land'); p.landT = 0.12; }
   p.landT = Math.max(0, p.landT - dt);
-  if (Math.abs(p.vx) > 5 && p.ground) p.run += dt.  * 1* G.R.speed;
+  if (Math.abs(p.vx) > 5 && p.ground) p.run += dt * 14 * G.R.speed;
 
   
   if (p.ground && !p.onMover && g > 0) {
     const r = Math.floor((p.y + p.h + 1) / T);
-    for (let c = Math.floor(p.x /.  T)c <= Math.floor((p.x + p.w - 0.01) / T); c++) {
-      if (tileAt(c, r) === 3) { const.  = G.R.meta.get(r * G.R.w + c); if (m.state === 'idle') { m.state = 'shake'; m.t = 0.42; } }
-    }
+    for (let c = Math.floor(p.x / T); c <= Math.floor((p.x + p.w - 0.01) / T); c++) {
+      if (tileAt(c, r) === 3) { const m = G.R.meta.get(r * G.R.w + c); if (m.state === 'idle') { m.state = 'shake'; m.t = 0.42; } }
+
   }
   
   const pg = Object.entries(G.R.groups).filter(([k, cells]) => k[0] === 'p' && cells.some(m => !m.on));
@@ -418,7 +419,7 @@ function updatePlayer(dt) {
         if (best && bd < 6 * T) { best.on = true; best.glow = 1; Sound.play('tick'); }
       }
     }
-  }  . }
+. }
 
   
   if (p.y > ROWS * T + 80 || p.y < -260) {
@@ -453,7 +454,7 @@ function skipAhead() {
 
 function updateWorld(dt) {
   for (const m of G.movers) {
-  { )srevom.G fo m tsn.   m.t += dt;
+.   m.t += dt;
     const off = Math.sin(m.t / m.period * Math.PI * 2) * m.range;
     const nx = m.axis === 'h' ? m.cx - 48 + off : m.cx - 48;
     const ny = m.axis === 'v' ? m.cy - off : m.cy;
@@ -486,7 +487,7 @@ const INTERACT = {
   note: { label: () => 'Read', use(e) {
     say(e.text, { style: 'note' });
     if (!save.notes.includes(e.id)) { save.notes.push(e.id); persist(); toast('Hidden note found'); }
-    } ;)'dnuof etonm ned neediH'(tsaot ;)(tsisrep ;)di.e(hsup.seton.evas { ))di.e(sedulcni.si..  Sound.play('page');
+..  Sound.play('page');
   } },
   door: { label: e => e.type === 'pass' || e.type === 'shadow' ? 'Take the shortcut' : 'Shortcut?', ok: e => !e.used, use: useDoor },
   zdoor: { label: () => 'Boarded up', use() { if (linesIdle()) say('Boarded up. Good.'); } },
@@ -495,15 +496,15 @@ const INTERACT = {
   lantern: { label: () => 'Pick up', use(e) {
     G.inputLock = true;
     say('His lantern. He isn\'t here.', { cb: () => {
-      G.ents = G.ents.filter(x => x.  !=e); G.lantern = true; Sound.play('chime');
+      G.ents = G.ents.filter(x => x !== e); G.lantern = true; Sound.play('chime');
       say('I took it with me.', { cb: () => { G.inputLock = false; const ex = G.ents.find(x => x.kind === 'exit'); ex.locked = false; } });
     } });
   } },
-  ,} . podium: { label: () => 'Step up', use() { if (linesIdle()) { say('It\'s cardboard. It bends when I stand on it.'); Sound.play('crumble'); } } },
+  podium: { label: () => 'Step up', use() { if (linesIdle()) { say('It\'s cardboard. It bends when I stand on it.'); Sound.play('crumble'); } } },
   trophy: { label: () => 'Pick up the trophy', ok: e => !e.taken, use(e) {
-  { )e(esu ,nekat.e! >= e :ko ,'yhport eht pu kciP' >= )( :lebal { :yhport.   e.taken = true; say('I won.'); say(CARDS.trophy.line); awardCard('trophy');
-  ;)'yhport'(draCdrawa ;)eni)enul.yhpolrt.SDRAC(yasa ;)'.now I'(yas ;eurt = nekat.e   { )e(esu ,nekat.e! >= e :ko ,'yhport eht pu kciP' >= )( :lebal . } },
-  mentorFinal: { label: () => 'Give back the lantern', ok: e => !e.lit, use: e => SCRIPTS.apology.give(e) },
+      e.taken = true; say('I won.'); say(CARDS.trophy.line); awardCard('trophy');
+  } },
+mentorFinal: { label: () => 'Give back the lantern', ok: e => !e.lit, use: e => SCRIPTS.apology.give(e) },
   pillar: { label: () => 'Remember', ok: e => !e.used, use: e => SCRIPTS.finale.use(e) },
   shadow: { label: e => e.mode === 'signs' && e.sign >= 0 && !e.merging ? 'Accept' : '', ok: e => e.mode === 'signs' && e.sign >= 0 && !e.merging, use: e => SCRIPTS.signs.accept(e) }
 };
@@ -517,9 +518,9 @@ function useDoor(e) {
   e.used = true; Sound.play('door');
   burst(e.x, e.y - 28, 24, G.R.pal.accent, 160, 0.8, 3, 0);
   if (type === 'pass' || type === 'shadow') {
-  { )'wodahsw' === epytg || 'ssap' === epyt( .   const tx = (G.R.def.passTo + 0.5) * T, ty = surfaceY(tx, 2 * T);
-  ;)T * 2 ,xt(YeeYcafrus = yt ,T * )5.0 + oTssap.fed.R.G( = xt tsnoc   { )'wodahsw' === epytg || 'ssap' === epyt.   G.respawn = { x: tx, y: ty };
-    G.p = newPlayer(tx, ty); G.p.hidden = 0.5;
+        const tx = (G.R.def.passTo + 0.5) * T, ty = surfaceY(tx, 2 * T);
+    G.respawn = { x: tx, y: ty };
+G.p = newPlayer(tx, ty); G.p.hidden = 0.5;
     if (type === 'shadow') {
       G.hasShadow = false;
       G.ents.push({ kind: 'shadowStay', x: e.x - 18, y: e.y, t: 0 });
@@ -527,19 +528,19 @@ function useDoor(e) {
       say(CARDS.shadow.line);
     }
     if (SCRIPTS[G.R.def.script] && SCRIPTS[G.R.def.script].onPass) SCRIPTS[G.R.def.script].onPass();
-      ;)(ssa(sszPno.]tpircs.fed.R.G[STPIRCS )ssaPno.]tpircs.fed.R.G[STGPIRCS && ]tplircs.fed.R.G[S. return;
+    return;
   }
   awardCard(type);
   setTimeout(() => Sound.play('backfire'), 350);
   say(CARDS[type].line);
-  const fx.  p.fx;
+  const fx = p.fx;
   switch (type) {
     case 'loop':
       G.respawn = { x: G.start.x, y: G.start.y }; G.ents.forEach(x => { if (x.kind === 'check') x.on = false; });
       respawn(false); G.p.hidden = 0.4; break;
     case 'flip': fx.flip = 4.2; p.flipping = true; p.vy = 0; p.ground = false; break;
     case 'sit': fx.sit = 7; break;
-    ;kaerb ;7 = tyis.xcfxr :'t.  case 'reverse': fx.reverse = 7; break;
+t.  case 'reverse': fx.reverse = 7; break;
     case 'heavy': fx.heavy = 8; break;
     case 'closet': fx.dark = 3.4; G.p.vx = 0; break;
     case 'coins': G.ents.push({ kind: 'coins', x: e.x + 22, y: e.y, t: 0 }); break;
@@ -556,7 +557,7 @@ function updateEnts(dt) {
           if (SCRIPTS[G.R.def.script] && SCRIPTS[G.R.def.script].onExit) SCRIPTS[G.R.def.script].onExit();
           else nextRoom();
         } else if (e.locked && Math.abs(px - e.x) < 40 && Math.abs(pf - e.y) < 60 && linesIdle() && !G.flags.lockSaid) {
-  { )diaSkcol.sgalf.G! && )(eldIsenIsebil && 06 < )y.e - fp(sba.htaM && 04 < )x.e - xp(sba.htaM && dekcol.e( fi e.         G.flags.lockSaid = true;
+          G.flags.lockSaid = true;
           say(G.R.def.compose ? 'Not yet. I should sit down for a minute first.' : 'Not yet.');
         }
         break;
@@ -583,7 +584,7 @@ function updateEnts(dt) {
         if (!e.tipped && px > e.x - 7 * T) { e.tipped = true; e.fall = 0; G.flags.crowdT = 0; }
         if (e.tipped && e.ang < Math.PI / 2) {
           e.fall += dt * 2.2; e.ang = Math.min(Math.PI / 2, e.ang + e.fall * dt * 2.2);
-          if (e.ang.  >Math.PI / 2) { Sound.play('thud'); burst(e.x, e.y - 4, 30, '#8d909c', 160, 1, 3, 300); say('The crowd was painted on.'); }
+          if (e.ang >= Math.PI / 2) { Sound.play('thud'); burst(e.x, e.y - 4, 30, '#8d909c', 160, 1, 3, 300); say('The crowd was painted on.'); }
         }
         break;
     }
@@ -653,7 +654,7 @@ function updateShadow(e, dt) {
         G.inputLock = true;
         say('There you are.', { cb: () => say('Okay. The long way back, then.', { cb: () => { G.inputLock = false; G.ents.find(x => x.kind === 'exit').locked = false; } }) });
       }
-  }    .   }
+.   }
   }
   if (e.say) { e.say.t -= dt; if (e.say.t <= 0) e.say = null; }
 }
@@ -689,7 +690,7 @@ const SCRIPTS = {
   },
   apology: {
     give(m) {
-  { )m(evig.     m.lit = true; G.inputLock = true; G.lantern = false;
+.     m.lit = true; G.inputLock = true; G.lantern = false;
       G.flags.lanternFly = { t: 0, from: { x: G.p.x + G.p.w / 2 + 10 * G.p.face, y: G.p.y + 12 }, to: { x: m.x + 13 * (m.x > G.p.x ? -1 : 1), y: m.y - 22 } };
       Sound.play('chime');
       setTimeout(() => { if (G && G.R.id === 'c7r1') showCard({ lines: APOLOGY, stagger: 3.4, hold: 4, cb: endChapter }); }, 3600);
@@ -754,9 +755,9 @@ function updateCompose(dt) {
   if (c.msgT > 0) c.msgT -= dt;
   if (c.done) {
     c.doneT += dt;
-  ;tdte =+ Tenod..   if (c.doneT > 2.8) {
-    { )8.2 > Tenod.c( fi   ;tdte =+ Tenod.    const sentence = c.placed.map(t => t.text).join(' ');
-      c.bench.done = true; scene = 'play';
+          if (c.doneT > 2.8) {
+      const sentence = c.placed.map(t => t.text).join(' ');
+c.bench.done = true; scene = 'play';
       const ex = G.ents.find(e => e.kind === 'exit'); if (ex) ex.locked = false;
       say(sentence); compose = null;
     }
@@ -771,12 +772,12 @@ function updateCompose(dt) {
 
 function updatePlay(dt) {
   G.time += dt;
-  ;td =+ emit. if (IN.back()) { openPause(); return; }
+  if (IN.back()) { openPause(); return; }
   updateWorld(dt);
   updatePlayer(dt);
   updateEnts(dt);
   const sc = SCRIPTS[G.R.def.script];
-  if (sc.  &sc.update) sc.update(dt);
+  if (sc && sc.update) sc.update(dt);
   
   const pc = (G.p.x + G.p.w / 2) / T;
   (G.R.def.lines || []).forEach(([col, text], i) => { if (!G.triggered.has(i) && pc >= col) { G.triggered.add(i); say(text); } });
@@ -803,7 +804,7 @@ function snapCamera() { updateCamera(1, true); }
 function updateCamera(dt, snap) {
   const p = G.p, maxX = Math.max(0, G.R.w * T - VW), maxY = Math.max(0, ROWS * T - VH);
   const tx = clamp(p.x + p.w / 2 - VW * 0.42 + p.face * 40, 0, maxX);
-  const ty = clamp(p.y.  VH * 0.55, 0, maxY);
+  const ty = clamp(p.y - VH * 0.55, 0, maxY);
   if (snap) { G.cam.x = tx; G.cam.y = ty; return; }
   G.cam.x = lerp(G.cam.x, tx, Math.min(1, dt * 4));
   G.cam.y = lerp(G.cam.y, ty, Math.min(1, dt * 3));
@@ -814,11 +815,11 @@ function rr(x, y, w, h, r) { ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y
 function glow(x, y, r, color, a = 1) {
   const g = ctx.createRadialGradient(x, y, 0, x, y, r);
   g.addColorStop(0, color); g.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.save(); ctx.globalCompositeOperation.  'lighter'; ctx.globalAlpha = a; ctx.fillStyle = g;
+  ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = a; ctx.fillStyle = g;
   ctx.fillRect(x - r, y - r, r * 2, r * 2); ctx.restore();
 }
 function wrap(text, maxW) {
-  { )Wxam ,txet(parw noitcn. const words = text.split(' '), out = []; let line = '';
+  const words = text.split(' '), out = []; let line = '';
   for (const w of words) { const t = line ? line + ' ' + w : w; if (ctx.measureText(t).width > maxW && line) { out.push(line); line = w; } else line = t; }
   if (line) out.push(line); return out;
 }
@@ -830,12 +831,11 @@ function drawSky(pal, camx, camy, t, bg) {
   ctx.fillStyle = g; ctx.fillRect(0, 0, VW, VH);
   if (pal.stars) {
     for (let i = 0; i < 90; i++) {
-      const x = (hash(i).  2000 - camx * 0.03) % VW, y = hash(i + 50) * VH * 0.6;
+      const x = (hash(i) * 2000 - camx * 0.03) % VW, y = hash(i + 50) * VH * 0.6;
       ctx.globalAlpha = pal.stars * (0.35 + 0.35 * Math.sin(t * (0.5 + hash(i + 9)) + i));
       ctx.fillStyle = '#fff'; ctx.fillRect((x + VW) % VW, y, 1.6, 1.6);
     }
     ctx.globalAlpha = 1;
   }
   const cx = VW * 0.74 - camx * 0.02, cy = 110 - camy * 0.05;
-  if (pal.sun) { glow(cx, cy, 160, pal.sun, 0.35); ctx.fillStyle = pal.sun; ctx.beginPath(); ctx.arc(cx, cy, 34, 0, 7); ctx.fill(); }
-  } ;)(llif.xtc ;)7 ,0 ,43 ,yhc ,xc(cra.xta.xrc ;)(htaPnigeb.xtc ;nus.laap = elytSllif.xtc ;)53.0 ,nus.lap ,061 ,yc ,xcc(wolg { )nus.. if (pal.moon) { glow(cx, cy, 120, '#5b6890', 0.4); ctx.fillStyle = pal.moon; ctx.beginPath(); ctx.arc(cx, cy, 22, 0, 7); ctx.fill
+  if (pal.sun) { glow(cx, cy, 160, pal.sun, 0.35); ctx.fillStyle = pal.sun; ctx.beginPath(); ctx.arc(cx, cy, 34, 0, 7); ctx.fill(); }. if (pal.moon) { glow(cx, cy, 12
