@@ -24,7 +24,7 @@
 * **14:42 – 15:37** *(0h 55m)* — Started `game.js`. [lapse](https://lapse.hackclub.com/timelapse/2r55LQoqCjgV)
 * **16:07 – 17:13** *(1h 06m)* — Kept working on `game.js`. [lapse](https://lapse.hackclub.com/timelapse/2r55LQoqCjgV)
 * **19:24 – 21:21** *(1h 57m)* — Big chunk of `game.js`. [lapse](https://lapse.hackclub.com/timelapse/FMoWlpm4oWhI)
-* **21:25 – 21:35** *(0h 10m)* — Fixed bugs in `game.js` (forgot to start the lapse).
+* **21:25 – 21:35** *(0h 10m)* — Fixed some bugs in `game.js` (forgot to start the lapse).
 
 ---
 
