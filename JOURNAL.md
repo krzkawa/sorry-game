@@ -26,6 +26,11 @@
 * **19:24 – 21:21** *(1h 57m)* — Big chunk of `game.js`. [lapse](https://lapse.hackclub.com/timelapse/FMoWlpm4oWhI)
 * **21:25 – 21:35** *(0h 10m)* — Fixed some bugs in `game.js` (forgot to start the lapse).
 
+## 2026-10-09
+
+* **12:28 – 13:49** *(1h 21m)* — Another big bit of `game.js`. [lapse](https://lapse.hackclub.com/timelapse/9X4KqOC0PuCl)
+* **14:30 – 15:20** *(0h 50m)* — Almost the rest of `game.js`. [lapse](https://lapse.hackclub.com/timelapse/9X4KqOC0PuCl)
+* **15:35 – 16:23** *(0h 48m)* — The rest of `game.js` and bug fixes in `game.js`. No lapse couse i forgot to unpause it.
 ---
 
 **Total Spent:** `14:47:00`
