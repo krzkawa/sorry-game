@@ -1,4 +1,4 @@
-/* Shortcut: engine, scenes and story scripts. Plain canvas, no build step. */
+
 'use strict';
 
 const T = 32, VW = 960, VH = 540, ROWS = 17;
@@ -18,14 +18,14 @@ const PAL = {
   dawn:    { sky: ['#5d7fb8', '#b9a8c4', '#ffd6a0'], hill1: '#7c86b0', hill2: '#5a6491', ground: '#343d5c', top: '#ffe2b0', edge: '#454f72', text: '#fffaf0', accent: '#ffcf7a', sun: '#fff0c8', stars: 0 }
 };
 
-/* ---------- small utilities ---------- */
+
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const approach = (v, t, d) => v < t ? Math.min(v + d, t) : Math.max(v - d, t);
 const lerp = (a, b, t) => a + (b - a) * t;
 const rnd = (a, b) => a + Math.random() * (b - a);
 function hash(n) { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); }
 
-/* ---------- canvas ---------- */
+
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
 const darkC = document.createElement('canvas'); darkC.width = VW; darkC.height = VH;
@@ -42,7 +42,7 @@ function resize() {
 }
 window.addEventListener('resize', resize); resize();
 
-/* ---------- input ---------- */
+
 const keys = {}, pressed = {};
 const mouse = { x: -1, y: -1, click: false };
 window.addEventListener('keydown', e => {
@@ -76,7 +76,7 @@ const IN = {
   down: () => was('ArrowDown', 'KeyS')
 };
 
-/* ---------- save ---------- */
+
 const SAVE_KEY = 'shortcut-save-v1';
 function freshSave() { return { v: 1, started: false, unlocked: 0, chapter: 0, room: 0, stones: [], cards: [], notes: [], finished: false, best: null, sound: true }; }
 let save = freshSave();
@@ -84,7 +84,7 @@ try { const s = JSON.parse(localStorage.getItem(SAVE_KEY)); if (s && s.v === 1) 
 function persist() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) {} }
 Sound.setEnabled(save.sound);
 
-/* ---------- room building ---------- */
+
 function parseTerrain(s) {
   const out = [];
   for (const tok of s.trim().split(/\s+/)) {
@@ -101,7 +101,7 @@ function parseItems(s) {
     return { ch: m[1], col: +m[2], h: m[3] != null ? +m[3] : null, r: m[4] != null ? +m[4] : null };
   });
 }
-/* Turns a room id into a normalised description, mirroring chapter 3 rooms for chapter 5. */
+
 function normRoom(id) {
   const d = ROOMS[id];
   if (!d.mirror) {
@@ -123,8 +123,8 @@ function normRoom(id) {
   return { id, def: Object.assign({}, src.def, { doors: {}, notes: [], script: null, lines: d.lines, taunts: d.taunts, passTo: null }), hs, plats, items, wind, ceil: src.ceil };
 }
 
-/* ---------- world ---------- */
-let G = null;       // the live room
+
+let G = null;       
 let scene = 'boot';
 let card = null, compose = null, menu = null, fade = { a: 0, dir: 0, cb: null };
 let titleT = 0, galleryTab = 0, returnTo = 'title';
@@ -245,7 +245,7 @@ function newPlayer(x, y) {
     onMover: null, fx: { flip: 0, sit: 0, reverse: 0, heavy: 0, dark: 0 }, flipping: false, landT: 0, hidden: 0 };
 }
 
-/* ---------- chapter flow ---------- */
+
 function startChapter(ci, ri = 0) {
   loadRoom(ci, ri);
   const CH = CHAPTERS[ci];
@@ -275,7 +275,7 @@ function endChapter() {
 function toTitle() { fadeTo(() => { scene = 'title'; menu = null; Sound.setMood('quiet'); Sound.setThin(false); }); }
 function fadeTo(cb) { if (fade.dir === 1) return; fade.dir = 1; fade.cb = cb; }
 
-/* ---------- text: lines and toasts ---------- */
+
 function say(text, opts = {}) { G.lines.push({ text, cb: opts.cb, style: opts.style || 'line' }); }
 function toast(text) { G.toasts.push({ text, t: 0 }); }
 function lineDur(l) { return (l.style === 'stone' ? 2.8 : 1.6) + l.text.length * 0.05; }
@@ -290,7 +290,7 @@ function updateLines(dt) {
 }
 function linesIdle() { return !G.line && !G.lines.length; }
 
-/* ---------- particles ---------- */
+
 function burst(x, y, n, color, spd = 120, life = 0.9, size = 3, grav = 200) {
   for (let i = 0; i < n; i++) {
     const a = rnd(0, Math.PI * 2), s = rnd(spd * 0.3, spd);
@@ -303,7 +303,7 @@ function updateParts(dt) {
   if (G.parts.length > 600) G.parts.splice(0, G.parts.length - 600);
 }
 
-/* ---------- player physics ---------- */
+
 function moveX(p, dx) {
   if (!dx) return false;
   p.x += dx;
@@ -373,7 +373,7 @@ function updatePlayer(dt) {
   const mult = rising && !(IN.jumpHeld() && !locked) ? 2.4 : 1;
   p.vy = clamp(p.vy + g * GRAV * mult * dt, -MAXFALL, MAXFALL);
 
-  // moving platform carry
+  
   if (p.onMover) { const m = p.onMover; moveX(p, m.dx); p.y = m.y - p.h; }
   const wasGround = p.ground;
   p.ground = false;
@@ -385,7 +385,7 @@ function updatePlayer(dt) {
     const hit = moveY(p, p.vy * dt / steps);
     if (hit) { if (hit === g) p.ground = true; p.vy = 0; }
   }
-  // land on moving platforms (only with normal gravity)
+  
   p.onMover = null;
   if (g > 0 && p.vy >= 0) {
     for (const m of G.movers) {
@@ -398,14 +398,14 @@ function updatePlayer(dt) {
   p.landT = Math.max(0, p.landT - dt);
   if (Math.abs(p.vx) > 5 && p.ground) p.run += dt * 14 * G.R.speed;
 
-  // crumble tiles underfoot
+  
   if (p.ground && !p.onMover && g > 0) {
     const r = Math.floor((p.y + p.h + 1) / T);
     for (let c = Math.floor(p.x / T); c <= Math.floor((p.x + p.w - 0.01) / T); c++) {
       if (tileAt(c, r) === 3) { const m = G.R.meta.get(r * G.R.w + c); if (m.state === 'idle') { m.state = 'shake'; m.t = 0.42; } }
     }
   }
-  // patience: stand still to grow the bridge
+  
   const pg = Object.entries(G.R.groups).filter(([k, cells]) => k[0] === 'p' && cells.some(m => !m.on));
   if (pg.length) {
     if (p.ground && dir === 0 && Math.abs(p.vx) < 1 && !IN.jumpHeld()) G.still += dt; else G.still = 0;
@@ -421,7 +421,7 @@ function updatePlayer(dt) {
     }
   }
 
-  // falling out
+  
   if (p.y > ROWS * T + 80 || p.y < -260) {
     if (p.flipping) { p.flipping = false; fx.flip = 0; respawn(false); toast('Back where I was. More or less.'); }
     else respawn(true);
@@ -451,7 +451,7 @@ function skipAhead() {
   toast('Skipped ahead. No shame in that one.');
 }
 
-/* ---------- moving platforms and tiles ---------- */
+
 function updateWorld(dt) {
   for (const m of G.movers) {
     m.t += dt;
@@ -465,7 +465,7 @@ function updateWorld(dt) {
     else if (m.state === 'gone') { m.t -= dt; if (m.t <= 0 && !overlapsCell(G.p, m.idx)) m.state = 'idle'; }
   }
   for (const [, cells] of Object.entries(G.R.groups)) for (const m of cells) if (m.glow > 0) m.glow = Math.max(0, m.glow - dt * 0.8);
-  // wind streaks
+  
   if (G.R.wind.length && windGust() && Math.random() < 0.7) {
     const [a, b] = G.R.wind[0];
     const x = G.cam.x + VW + 20, y = G.cam.y + rnd(60, VH - 40);
@@ -473,7 +473,7 @@ function updateWorld(dt) {
   }
 }
 
-/* ---------- entities ---------- */
+
 function near(e, rx = 34, ry = 60) {
   const p = G.p, px = p.x + p.w / 2, pf = p.y + p.h;
   return Math.abs(px - e.x) < rx && Math.abs(pf - e.y) < ry;
@@ -659,7 +659,7 @@ function updateShadow(e, dt) {
   if (e.say) { e.say.t -= dt; if (e.say.t <= 0) e.say = null; }
 }
 
-/* ---------- story scripts ---------- */
+
 const SIGNS = ['You cheated.', 'He trusted you.', 'You let him down.', 'It was wrong.'];
 const SCRIPTS = {
   wallEnd: {
@@ -730,7 +730,7 @@ function practiceDone() {
     cb: () => fadeTo(() => { loadRoom(9, 0); scene = 'play'; }) });
 }
 
-/* ---------- composer (chapter 6) ---------- */
+
 function openCompose(bench) {
   const def = G.R.def.compose;
   compose = { bench, tiles: def.tiles.map(([text, ord]) => ({ text, ord, gone: false, shake: 0, crumble: 0 })), placed: [], msg: '', msgT: 0, done: false, doneT: 0, excuse: 0, rects: [] };
@@ -769,7 +769,7 @@ function updateCompose(dt) {
   if (IN.back()) { scene = 'play'; compose = null; }
 }
 
-/* ---------- play update ---------- */
+
 function updatePlay(dt) {
   G.time += dt;
   if (IN.back()) { openPause(); return; }
@@ -778,10 +778,10 @@ function updatePlay(dt) {
   updateEnts(dt);
   const sc = SCRIPTS[G.R.def.script];
   if (sc && sc.update) sc.update(dt);
-  // line triggers by column
+  
   const pc = (G.p.x + G.p.w / 2) / T;
   (G.R.def.lines || []).forEach(([col, text], i) => { if (!G.triggered.has(i) && pc >= col) { G.triggered.add(i); say(text); } });
-  // interaction
+  
   G.focus = null;
   if (!G.inputLock && G.p.hidden <= 0) {
     let best = null, bd = 1e9;
@@ -810,7 +810,7 @@ function updateCamera(dt, snap) {
   G.cam.y = lerp(G.cam.y, ty, Math.min(1, dt * 3));
 }
 
-/* ---------- drawing helpers ---------- */
+
 function rr(x, y, w, h, r) { ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h); }
 function glow(x, y, r, color, a = 1) {
   const g = ctx.createRadialGradient(x, y, 0, x, y, r);
@@ -1171,7 +1171,7 @@ function drawHUD() {
   if (CH.extra) { ctx.globalAlpha = 0.9; ctx.font = '700 18px ' + SANS; ctx.fillText((G.flags.clock || 0).toFixed(1) + ' s', VW - 18, 14); }
   else if (G.R.ci >= 1) ctx.fillText('Stones ' + save.stones.length + '/6   Cards ' + save.cards.length + '/10   Esc menu', VW - 18, 16);
   ctx.globalAlpha = 1;
-  // toasts
+  
   ctx.textAlign = 'left'; ctx.font = '600 15px ' + SANS;
   G.toasts.forEach((t, i) => {
     const a = t.t < 0.3 ? t.t / 0.3 : t.t > 3.4 ? (4 - t.t) / 0.6 : 1;
@@ -1233,7 +1233,7 @@ function drawPlay() {
   drawHUD();
 }
 
-/* ---------- full-screen cards ---------- */
+
 function showCard(o) { card = Object.assign({ t: 0, stagger: 2.2, hold: 1.5, prompt: 'Press Enter to continue' }, o); scene = 'card'; }
 function updateCard(dt) {
   card.t += dt;
@@ -1277,7 +1277,7 @@ function drawCard() {
   ctx.globalAlpha = 1;
 }
 
-/* ---------- composer drawing ---------- */
+
 function drawCompose() {
   const c = compose;
   ctx.fillStyle = 'rgba(4,6,14,0.72)'; ctx.fillRect(0, 0, VW, VH);
@@ -1288,14 +1288,14 @@ function drawCompose() {
   ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   ctx.font = '600 13px ' + SANS; ctx.fillStyle = '#c9b98f'; ctx.fillText('A   R E S T   S T O P', VW / 2, py + 34);
   ctx.font = 'italic 22px ' + SERIF; ctx.fillStyle = '#f6ecd6'; ctx.fillText('Put it together. Only the honest words fit.', VW / 2, py + 66);
-  // sentence
+  
   const parts = c.placed.map(t => t.text);
   for (let i = c.placed.length; i < c.need; i++) parts.push('________');
   ctx.font = (c.done ? '500 ' : 'italic ') + '26px ' + SERIF; ctx.fillStyle = c.done ? '#ffd38a' : '#f6ecd6';
   const sl = wrap(parts.join(' '), pw - 80);
   sl.forEach((l, i) => ctx.fillText(l, VW / 2, py + 130 + i * 34 - (sl.length - 1) * 17));
   if (c.done) glow(VW / 2, py + 130, 260, '#ffcf7a', 0.25 * Math.min(1, c.doneT));
-  // tiles
+  
   c.rects = [];
   if (!c.done) {
     ctx.font = 'italic 18px ' + SERIF;
@@ -1326,7 +1326,7 @@ function drawCompose() {
   }
 }
 
-/* ---------- menus ---------- */
+
 function runMenu(items, x, y, opts = {}) {
   if (!menu || menu.key !== opts.key) menu = { key: opts.key, sel: items.findIndex(i => !i.disabled) };
   const lh = opts.lh || 44;
@@ -1469,7 +1469,7 @@ function updatePause() {
   if (IN.back()) { scene = 'play'; menu = null; }
 }
 
-/* ---------- main loop ---------- */
+
 let last = performance.now();
 function frame(now) {
   const dt = Math.min(1 / 30, (now - last) / 1000); last = now;
@@ -1490,7 +1490,7 @@ function frame(now) {
       case 'compose': updateCompose(dt); drawPlay(); if (compose) drawCompose(); break;
       case 'pause': updatePause(); break;
     }
-  } catch (err) { console.error(err); }
+  } catch (err) {}
   if (fade.a > 0) { ctx.fillStyle = 'rgba(8,10,20,' + fade.a + ')'; ctx.fillRect(0, 0, VW, VH); }
   for (const k in pressed) delete pressed[k];
   mouse.click = false;
@@ -1498,7 +1498,7 @@ function frame(now) {
 }
 requestAnimationFrame(frame);
 
-/* test hook used by the automated checks; harmless for players */
+
 window.__shortcut = {
   goto(ci, ri) { startChapter(ci, ri); scene = 'play'; card = null; },
   get state() { return { scene, room: G && G.R.id, x: G && G.p.x, y: G && G.p.y, ground: G && G.p.ground }; },
